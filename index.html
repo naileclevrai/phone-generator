@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de Plages de Numéros</title>
+</head>
+<body>
+  <header>
+    <h1>Générateur de Plages de Numéros de Téléphone</h1>
+  </header>
+  
+  <main>
+    <section>
+      <label for="regionSelect">Sélectionnez un code régional :</label>
+      <select id="regionSelect">
+        <option value="01">01</option>
+        <option value="02">02</option>
+        <option value="03">03</option>
+        <option value="04">04</option>
+        <option value="05">05</option>
+        <option value="06">06</option>
+        <option value="07">07</option>
+        <option value="08">08</option>
+        <option value="09">09</option>
+      </select>
+    </section>
+
+    <section>
+      <label for="startNumber">Numéro de départ :</label>
+      <input type="text" id="startNumber" placeholder="Ex : 1234567">
+
+      <label for="endNumber">Numéro de fin :</label>
+      <input type="text" id="endNumber" placeholder="Ex : 1234570">
+      
+      <button onclick="generateAndSave()">Générer et sauvegarder</button>
+    </section>
+  </main>
+
+  <script>
+    function generateAndSave() {
+      const region = document.getElementById('regionSelect').value;
+      const start = parseInt(document.getElementById('startNumber').value, 10);
+      const end = parseInt(document.getElementById('endNumber').value, 10);
+
+      if (isNaN(start) || isNaN(end) || start > end) {
+        alert("Veuillez entrer une plage valide.");
+        return;
+      }
+
+      let phoneNumbers = [];
+      for (let i = start; i <= end; i++) {
+        phoneNumbers.push(`${region}${i.toString().padStart(7, '0')}`);
+      }
+
+      const fileContent = phoneNumbers.join('\n');
+      const blob = new Blob([fileContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `numeros_${region}_${start}_${end}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
